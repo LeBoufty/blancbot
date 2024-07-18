@@ -1,0 +1,52 @@
+{
+    "smashInputs": {
+        "ZL": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "L": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "ZR": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "R": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "A": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "B": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "X": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "Y": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie"
+        ],
+        "Up": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie", "Provocation Haut"
+        ],
+        "Down": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie", "Provocation Bas"
+        ],
+        "Side": [
+            "Attaque", "Attaque Spéciale", "Saut", "Bouclier", "Saisie", "Provocation Côté"
+        ],
+        "RStick": [
+            "Attaque puissante", "Attaque spéciale", "Saut", "Bouclier", "Saisie", "Attaque smash"
+        ],
+        "Vibrations": [
+            "Sans", "Avec"
+        ],
+        "BA_Smash": [
+            "Sans", "Avec"
+        ],
+        "Saut_Rapide": [
+            "Sans", "Avec"
+        ],
+        "Sensibilite": [
+            "Faible", "Normale", "Élevée"
+        ]
+    }
+}
