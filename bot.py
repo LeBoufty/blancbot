@@ -17,6 +17,13 @@ async def randomizeinputs(ctx: discord.Interaction):
         message += f"* **{input.replace('_', ' ')} :** {random.choice(smashinputs[input])}\n"
     await ctx.response.send_message(message, ephemeral=False)
 
+@tree.command(
+        name="premierministre",
+        description="Bonjour à tous je suis le premier ministre."
+)
+async def premierministre(ctx: discord.Interaction):
+    await ctx.response.send_message("Bonjour à tous je suis le premier ministre.", ephemeral=False)
+
 @client.event
 async def on_ready():
     await tree.sync()
