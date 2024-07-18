@@ -6,6 +6,7 @@ import random
 client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client)
 smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashInputs']
+thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 
 @tree.command(
         name="randomizeinputs",
@@ -23,6 +24,13 @@ async def randomizeinputs(ctx: discord.Interaction):
 )
 async def premierministre(ctx: discord.Interaction):
     await ctx.response.send_message("Bonjour à tous je suis le premier ministre.", ephemeral=False)
+
+@tree.command(
+        name="thumbsup",
+        description="👍👍"
+)
+async def thumbsup(ctx: discord.Interaction):
+    await ctx.response.send_message(random.choice(thumbsupimages), ephemeral=False)
 
 @client.event
 async def on_ready():
