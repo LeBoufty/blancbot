@@ -7,6 +7,7 @@ client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client)
 smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashInputs']
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
+valentin_messages = open("valentin/bawardage.txt", 'r', encoding="utf-8").readlines()
 
 @tree.command(
         name="randomizeinputs",
@@ -31,6 +32,29 @@ async def premierministre(ctx: discord.Interaction):
 )
 async def thumbsup(ctx: discord.Interaction):
     await ctx.response.send_message(random.choice(thumbsupimages), ephemeral=False)
+
+# @tree.command(
+#         name="scrapevalentin",
+#         description="Scrape les messages de Valentin"
+# )
+# async def scrapevalentin(ctx: discord.Interaction):
+#     await ctx.response.defer(ephemeral=True)
+#     channel = ctx.channel
+#     messages = channel.history(limit=20000)
+#     VALENTIN_ID = int(open("VALENTIN_ID", 'r').read())
+#     messages = [message.content async for message in messages if message.author.id == VALENTIN_ID]
+#     with open(f"valentin/{channel.name}.txt", 'w', encoding="utf-8") as f:
+#         for m in messages:
+#             try: f.write(m + "\n")
+#             except: pass
+#     await ctx.followup.send("Messages scrapés", ephemeral=True)
+
+@tree.command(
+        name="valentin",
+        description="Dispense de la sagesse"
+)
+async def valentin(ctx: discord.Interaction):
+    await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
 
 @client.event
 async def on_ready():

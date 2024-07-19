@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 
 BOT_TOKEN
+VALENTIN_ID
+valentin/*.txt
