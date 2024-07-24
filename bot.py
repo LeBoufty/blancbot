@@ -4,6 +4,9 @@ import json
 import random
 import os
 import requests
+from PIL import Image, ImageDraw, ImageFont
+import io
+import textwrap
 
 client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client)
@@ -28,14 +31,39 @@ async def randomizeinputs(ctx: discord.Interaction):
 async def premierministre(ctx: discord.Interaction):
     await ctx.response.send_message("Bonjour à tous je suis le premier ministre.", ephemeral=False)
 
+def get_font_size(imgscale):
+    return max(24, int(imgscale / 10))
+
 @tree.command(
         name="thumbsup",
         description="👍👍"
 )
-async def thumbsup(ctx: discord.Interaction):
+async def thumbsup(ctx: discord.Interaction, message: str = None):
     imgno = random.randint(0, len(thumbsupimages) - 1)
-    with open(f"thumbsup/{imgno}.png", 'rb') as f:
-        await ctx.response.send_message(file=discord.File(f), ephemeral=False)
+    if message is None:
+        with open(f"thumbsup/{imgno}.png", 'rb') as f:
+            await ctx.response.send_message(file=discord.File(f), ephemeral=False)
+    else:
+        lines = textwrap.wrap(message, width=32)
+        img = Image.open(f"thumbsup/{imgno}.png")
+        draw = ImageDraw.Draw(img)
+        imgwidth, imgheight = img.size
+        fontsize = get_font_size(min(imgwidth, imgheight))
+        font = ImageFont.truetype("data/Upright.ttf", fontsize)
+        textwidth = max(font.getmask(line).size[0] for line in lines)
+        textheight = font.getmask(lines[0]).size[1]
+        y_text = (imgheight - textheight) // 2 - textheight * len(lines) // 2
+        for line in lines:
+            draw.text(((imgwidth - textwidth) // 2, y_text),
+                      line, (255,255,255), font=font,
+                      stroke_width=fontsize//20, stroke_fill=(0, 0, 0))
+            y_text += textheight
+        with io.BytesIO() as image_binary:
+                    img.save(image_binary, 'PNG')
+                    image_binary.seek(0)
+                    await ctx.response.send_message(file=discord.File(fp=image_binary,
+                                                                      filename='thumbsup.png'),
+                                                    ephemeral=False)
 
 # @tree.command(
 #         name="scrapevalentin",
