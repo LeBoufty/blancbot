@@ -33,7 +33,9 @@ async def premierministre(ctx: discord.Interaction):
         description="👍👍"
 )
 async def thumbsup(ctx: discord.Interaction):
-    await ctx.response.send_message(random.choice(thumbsupimages), ephemeral=False)
+    imgno = random.randint(0, len(thumbsupimages) - 1)
+    with open(f"thumbsup/{imgno}.png", 'rb') as f:
+        await ctx.response.send_message(file=discord.File(f), ephemeral=False)
 
 # @tree.command(
 #         name="scrapevalentin",
