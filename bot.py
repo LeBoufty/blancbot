@@ -2,6 +2,8 @@ import discord
 from discord import app_commands
 import json
 import random
+import os
+import requests
 
 client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client)
@@ -62,4 +64,11 @@ async def on_ready():
     print(f"We have logged in as {client.user}")
 
 if __name__ == "__main__":
+    try:
+        os.mkdir("thumbsup")
+        for i, url in enumerate(thumbsupimages):
+            with open(f"thumbsup/{i}.png", 'wb') as f:
+                f.write(requests.get(url).content)
+    except:
+        pass
     client.run(open("BOT_TOKEN", 'r').read())

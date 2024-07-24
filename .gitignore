@@ -164,3 +164,4 @@ cython_debug/
 BOT_TOKEN
 VALENTIN_ID
 valentin/*.txt
+thumbsup/
