@@ -7,14 +7,14 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 import io
 import textwrap
-from pythonWordArt import pyWordArt
+from unidecode import unidecode
 
 client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client)
 smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashInputs']
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 valentin_messages = open("valentin/bawardage.txt", 'r', encoding="utf-8").readlines()
-wordart_styles = ["aqua", "chrome", "gray-block", "green-marble", "horizon", "marble-slab", "purple", "rainbow", "sunset", "superhero", "tilt"]
+cursive = "𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵      𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏"
 VALENTIN_ID = int(open("VALENTIN_ID", 'r').read())
 
 @tree.command(
@@ -87,8 +87,16 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
         name="valentin",
         description="Dispense de la sagesse"
 )
-async def valentin(ctx: discord.Interaction):
-    await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
+@app_commands.describe(style="Le style donné au message")
+@app_commands.choices(style=[
+    app_commands.Choice(name="cursive", value="cursive"),
+    app_commands.Choice(name="default", value="default")
+])
+async def valentin(ctx: discord.Interaction, style: app_commands.Choice[str] = "default"):
+    if style.value == "cursive":
+        await ctx.response.send_message("".join([cursive[ord(c) - ord('A')] if c.isalpha() else c for c in unidecode(random.choice(valentin_messages))]), ephemeral=False)
+    else:
+        await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
 
 @client.event
 async def on_ready():
