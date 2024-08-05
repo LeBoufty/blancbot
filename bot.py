@@ -7,12 +7,15 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 import io
 import textwrap
+from pythonWordArt import pyWordArt
 
 client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client)
 smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashInputs']
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 valentin_messages = open("valentin/bawardage.txt", 'r', encoding="utf-8").readlines()
+wordart_styles = ["aqua", "chrome", "gray-block", "green-marble", "horizon", "marble-slab", "purple", "rainbow", "sunset", "superhero", "tilt"]
+VALENTIN_ID = int(open("VALENTIN_ID", 'r').read())
 
 @tree.command(
         name="randomizeinputs",
@@ -73,7 +76,6 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
 #     await ctx.response.defer(ephemeral=True)
 #     channel = ctx.channel
 #     messages = channel.history(limit=20000)
-#     VALENTIN_ID = int(open("VALENTIN_ID", 'r').read())
 #     messages = [message.content async for message in messages if message.author.id == VALENTIN_ID]
 #     with open(f"valentin/{channel.name}.txt", 'w', encoding="utf-8") as f:
 #         for m in messages:
@@ -92,6 +94,13 @@ async def valentin(ctx: discord.Interaction):
 async def on_ready():
     await tree.sync()
     print(f"We have logged in as {client.user}")
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.auhtor.id == VALENTIN_ID and message.content != "":
+        open("valentin/bawardage.txt", 'a', encoding="utf-8").write(message.content + "\n")
 
 if __name__ == "__main__":
     try:
