@@ -107,7 +107,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.auhtor.id == VALENTIN_ID and message.content != "":
+    if message.author.id == VALENTIN_ID and message.content != "":
         open("valentin/bawardage.txt", 'a', encoding="utf-8").write(message.content + "\n")
 
 if __name__ == "__main__":
