@@ -93,11 +93,12 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
     app_commands.Choice(name="default", value="default")
 ])
 async def valentin(ctx: discord.Interaction, style: app_commands.Choice[str] = "default"):
-    if style == "default":
-        await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
-    if style.value == "cursive":
-        await ctx.response.send_message("".join([cursive[ord(c) - ord('A')] if c.isalpha() else c for c in unidecode(random.choice(valentin_messages))]), ephemeral=False)
-    else:
+    try:
+        if style.value == "cursive":
+            await ctx.response.send_message("".join([cursive[ord(c) - ord('A')] if c.isalpha() else c for c in unidecode(random.choice(valentin_messages))]), ephemeral=False)
+        else:
+            await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
+    except AttributeError:
         await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
 
 @client.event
