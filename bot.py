@@ -15,6 +15,8 @@ smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashI
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 valentin_messages = open("valentin/bawardage.txt", 'r', encoding="utf-8").readlines()
 cursive = "𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵      𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏"
+IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech !
+Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
 VALENTIN_ID = int(open("VALENTIN_ID", 'r').read())
 
 @tree.command(
@@ -100,6 +102,13 @@ async def valentin(ctx: discord.Interaction, style: app_commands.Choice[str] = "
             await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
     except AttributeError:
         await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
+
+@tree.command(
+        name="ia",
+        description="Décrit un projet innovant et unique"
+)
+async def IA(ctx: discord.Interaction):
+    await ctx.response.send_message(IA_message, ephemeral=False)
 
 @client.event
 async def on_ready():
