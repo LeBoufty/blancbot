@@ -120,7 +120,9 @@ async def on_message(message):
     if message.author == client.user:
         return
     if message.author.id == VALENTIN_ID and message.content != "" and message.content[0] != "$":
-        open("valentin/bawardage.txt", 'a', encoding="utf-8").write(message.content + "\n")
+        f = open("valentin/bawardage.txt", 'a', encoding="utf-8")
+        f.write("\n" + message.content)
+        f.close()
 
 if __name__ == "__main__":
     try:
