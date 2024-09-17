@@ -9,7 +9,9 @@ import io
 import textwrap
 from unidecode import unidecode
 
-client = discord.Client(intents=discord.Intents.default())
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashInputs']
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
