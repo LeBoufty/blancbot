@@ -72,6 +72,25 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
                                                                       filename='thumbsup.png'),
                                                     ephemeral=False)
 
+@tree.command(
+        name="jmm",
+        description="Envie d'me compresser l'jpeg"
+)
+async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 0):
+    # Ouverture de l'image
+    img_data = await img.read()
+    img = Image.open(io.BytesIO(img_data))
+    # Suppression du canal alpha
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    # Compression
+    with io.BytesIO() as image_binary:
+        img.save(image_binary, 'JPEG', quality=quality)
+        image_binary.seek(0)
+        await ctx.response.send_message(file=discord.File(fp=image_binary,
+                                                          filename='compressed.jpg'),
+                                        ephemeral=True)
+
 # @tree.command(
 #         name="scrapevalentin",
 #         description="Scrape les messages de Valentin"
