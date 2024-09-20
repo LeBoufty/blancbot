@@ -7,19 +7,14 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 import io
 import textwrap
-from unidecode import unidecode
 
 intents = discord.Intents.default()
-intents.message_content = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashInputs']
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
-valentin_messages = open("valentin/bawardage.txt", 'r', encoding="utf-8").readlines()
-cursive = "𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵      𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏"
 IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech !
 Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
-VALENTIN_ID = int(open("VALENTIN_ID", 'r').read())
 
 @tree.command(
         name="randomizeinputs",
@@ -91,39 +86,6 @@ async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 
                                                           filename='compressed.jpg'),
                                         ephemeral=True)
 
-# @tree.command(
-#         name="scrapevalentin",
-#         description="Scrape les messages de Valentin"
-# )
-# async def scrapevalentin(ctx: discord.Interaction):
-#     await ctx.response.defer(ephemeral=True)
-#     channel = ctx.channel
-#     messages = channel.history(limit=20000)
-#     messages = [message.content async for message in messages if message.author.id == VALENTIN_ID]
-#     with open(f"valentin/{channel.name}.txt", 'w', encoding="utf-8") as f:
-#         for m in messages:
-#             try: f.write(m + "\n")
-#             except: pass
-#     await ctx.followup.send("Messages scrapés", ephemeral=True)
-
-@tree.command(
-        name="valentin",
-        description="Dispense de la sagesse"
-)
-@app_commands.describe(style="Le style donné au message")
-@app_commands.choices(style=[
-    app_commands.Choice(name="cursive", value="cursive"),
-    app_commands.Choice(name="default", value="default")
-])
-async def valentin(ctx: discord.Interaction, style: app_commands.Choice[str] = "default"):
-    try:
-        if style.value == "cursive":
-            await ctx.response.send_message("".join([cursive[ord(c) - ord('A')] if c.isalpha() else c for c in unidecode(random.choice(valentin_messages))]), ephemeral=False)
-        else:
-            await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
-    except AttributeError:
-        await ctx.response.send_message(random.choice(valentin_messages), ephemeral=False)
-
 @tree.command(
         name="ia",
         description="Décrit un projet innovant et unique"
@@ -135,15 +97,6 @@ async def IA(ctx: discord.Interaction):
 async def on_ready():
     await tree.sync()
     print(f"We have logged in as {client.user}")
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.author.id == VALENTIN_ID and message.content != "" and message.content[0] != "$":
-        f = open("valentin/bawardage.txt", 'a', encoding="utf-8")
-        f.write("\n" + message.content)
-        f.close()
 
 if __name__ == "__main__":
     try:
