@@ -163,3 +163,4 @@ cython_debug/
 
 BOT_TOKEN
 thumbsup/
+.vscode/
