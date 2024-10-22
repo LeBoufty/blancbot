@@ -36,9 +36,8 @@ async def premierministre(ctx: discord.Interaction):
 def get_font_size(imgscale):
     return max(24, int(imgscale / 10))
 
-def add_text_to_image(image_path, message, font_path="data/Upright.ttf"):
+def add_text_to_image(img, message, font_path="data/Upright.ttf"):
     lines = textwrap.wrap(message, width=32)
-    img = Image.open(image_path)
     draw = ImageDraw.Draw(img)
     imgwidth, imgheight = img.size
     fontsize = get_font_size(min(imgwidth, imgheight))
@@ -64,7 +63,8 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
         with open(image_path, 'rb') as f:
             await ctx.response.send_message(file=discord.File(f), ephemeral=False)
     else:
-        img = add_text_to_image(image_path, message)
+        img = Image.open(image_path)
+        img = add_text_to_image(img, message)
         with io.BytesIO() as image_binary:
             img.save(image_binary, 'PNG')
             image_binary.seek(0)
@@ -79,15 +79,15 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
 async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 0, message: str = None):
     # Ouverture de l'image
     img_data = await img.read()
-    img = Image.open(io.BytesIO(img_data))
-    # Passage en RGB
-    img.convert('RGB')
+    image = Image.open(io.BytesIO(img_data))
     # Ajout du texte
     if message is not None:
-        img = add_text_to_image(io.BytesIO(img_data), message)
+        image = add_text_to_image(image, message)
+    # Passage en RGB
+    image = image.convert('RGB')
     # Compression
     with io.BytesIO() as image_binary:
-        img.save(image_binary, 'JPEG', quality=quality)
+        image.save(image_binary, 'JPEG', quality=quality)
         image_binary.seek(0)
         await ctx.response.send_message(file=discord.File(fp=image_binary,
                                                           filename='compressed.jpg'),
