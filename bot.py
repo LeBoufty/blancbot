@@ -80,9 +80,8 @@ async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 
     # Ouverture de l'image
     img_data = await img.read()
     img = Image.open(io.BytesIO(img_data))
-    # Suppression du canal alpha
-    if img.mode != 'RGB':
-        img = img.convert('RGB')
+    # Passage en RGB
+    img.convert('RGB')
     # Ajout du texte
     if message is not None:
         img = add_text_to_image(io.BytesIO(img_data), message)
