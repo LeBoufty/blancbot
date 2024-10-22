@@ -76,13 +76,16 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
         name="jmm",
         description="Envie d'me compresser l'jpeg"
 )
-async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 0):
+async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 0, message: str = None):
     # Ouverture de l'image
     img_data = await img.read()
     img = Image.open(io.BytesIO(img_data))
     # Suppression du canal alpha
     if img.mode != 'RGB':
         img = img.convert('RGB')
+    # Ajout du texte
+    if message is not None:
+        img = add_text_to_image(io.BytesIO(img_data), message)
     # Compression
     with io.BytesIO() as image_binary:
         img.save(image_binary, 'JPEG', quality=quality)
