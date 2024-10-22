@@ -92,7 +92,7 @@ async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 
         image_binary.seek(0)
         await ctx.response.send_message(file=discord.File(fp=image_binary,
                                                           filename='compressed.jpg'),
-                                        ephemeral=True)
+                                        ephemeral=False)
 
 @tree.command(
         name="ia",
