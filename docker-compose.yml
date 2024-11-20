@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  bot:
+    build: .
+    volumes:
+      - ./BOT_TOKEN:/app/BOT_TOKEN:ro
+      - ./data:/app/data:ro
+      - ./thumbsup:/app/thumbsup:rw
