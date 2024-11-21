@@ -162,5 +162,5 @@ cython_debug/
 #.idea/
 
 BOT_TOKEN
-thumbsup/
+# thumbsup/
 .vscode/
