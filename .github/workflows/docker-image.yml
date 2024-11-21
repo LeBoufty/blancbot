@@ -7,12 +7,39 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Add bot token to image
+      run: echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" > BOT_TOKEN
+
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag blancbot:$(date +%s)
+      run: docker build . --file Dockerfile --tag blancbot:latest
+
+    - name: Log in to Docker Hub
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Push the Docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/blancbot:latest
+
+    - name: Deploy to VPS
+      env:
+        VPS_HOST: ${{ secrets.VPS_HOST }}
+        VPS_USER: ${{ secrets.VPS_USER }}
+        VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      run: |
+        echo "${{ secrets.VPS_SSH_KEY }}" > ssh_key
+        chmod 600 ssh_key
+        ssh -o StrictHostKeyChecking=no -i ssh_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/blancbot:latest
+          sudo docker stop blancbot || true
+          sudo docker rm blancbot || true
+          sudo docker run -d --name blancbot ${{ secrets.DOCKER_USERNAME }}/blancbot:latest
+        EOF
+      shell: bash
