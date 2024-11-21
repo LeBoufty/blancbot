@@ -17,7 +17,7 @@ jobs:
       run: echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" > BOT_TOKEN
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag blancbot:latest
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}blancbot:latest
 
     - name: Log in to Docker Hub
       env:
