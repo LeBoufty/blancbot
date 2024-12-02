@@ -108,6 +108,7 @@ async def patatechaude(ctx: discord.Interaction, cible: discord.User):
         return
     if cible.bot:
         await ctx.response.send_message("Les bots ne connaissent pas le jeu de la patate chaude ET ne peuvent pas répondre.", ephemeral=True)
+        return
     role = discord.utils.get(ctx.guild.roles, id=patate_role)
     try:
         await cible.add_roles(role)
