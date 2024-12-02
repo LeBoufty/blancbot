@@ -111,6 +111,7 @@ async def patatechaude(ctx: discord.Interaction, cible: discord.User):
         return
     if patate_role in [role.id for role in cible.roles]:
         await ctx.response.send_message("Cette personne répond déjà.", ephemeral=True)
+        return
     role = discord.utils.get(ctx.guild.roles, id=patate_role)
     try:
         await cible.add_roles(role)
