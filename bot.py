@@ -15,6 +15,7 @@ smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashI
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech !
 Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
+patate_role = 1311765186876805202
 
 @tree.command(
         name="randomizeinputs",
@@ -92,6 +93,26 @@ async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 
         await ctx.response.send_message(file=discord.File(fp=image_binary,
                                                           filename='compressed.jpg'),
                                         ephemeral=False)
+
+@tree.command(
+        name="patatechaude",
+        description="Tu connais le jeu de la patate chaude ?"
+)
+async def patatechaude(ctx: discord.Interaction, cible: discord.User):
+    if cible.id == ctx.user.id:
+        await ctx.response.send_message("Tu connais le jeu de la patate chaude ? C'est PAS toi qui réponds !", ephemeral=True)
+        return
+    if patate_role not in [role.id for role in ctx.user.roles]:
+        await ctx.response.send_message("Tu n'as pas le rôle patate chaude.", ephemeral=True)
+        return
+    role = discord.utils.get(ctx.guild.roles, id=patate_role)
+    try:
+        await cible.add_roles(role)
+        await ctx.user.remove_roles(role)
+    except discord.errors.Forbidden:
+        await ctx.response.send_message("Je n'ai pas la permission de donner le rôle.", ephemeral=True)
+        return
+    await ctx.response.send_message(f"Tu connais le jeu de la patate chaude ? C'est {cible.mention} qui répond.", ephemeral=True)
 
 @tree.command(
         name="ia",
