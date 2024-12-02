@@ -16,6 +16,7 @@ thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech !
 Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
 patate_role = 1311765186876805202
+#patate_role = 541259130191740938 # Rôle de test
 
 @tree.command(
         name="randomizeinputs",
@@ -105,6 +106,8 @@ async def patatechaude(ctx: discord.Interaction, cible: discord.User):
     if patate_role not in [role.id for role in ctx.user.roles]:
         await ctx.response.send_message("Tu n'as pas le rôle patate chaude.", ephemeral=True)
         return
+    if cible.bot:
+        await ctx.response.send_message("Les bots ne connaissent pas le jeu de la patate chaude ET ne peuvent pas répondre.", ephemeral=True)
     role = discord.utils.get(ctx.guild.roles, id=patate_role)
     try:
         await cible.add_roles(role)
