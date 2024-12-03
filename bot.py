@@ -78,7 +78,13 @@ async def thumbsup(ctx: discord.Interaction, message: str = None):
         name="jmm",
         description="Envie d'me compresser l'jpeg"
 )
-async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 0, message: str = None):
+async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 0, message: str = None, resize: int = 100):
+    if quality < 0 or quality > 100:
+        await ctx.response.send_message("La qualité doit être entre 0 et 100. (Par défaut : 0)", ephemeral=True)
+        return
+    if resize < 1 or resize > 100:
+        await ctx.response.send_message("Le pourcentage de redimensionnement doit être entre 1 et 100. (Par défaut : 100)", ephemeral=True)
+        return
     # Ouverture de l'image
     img_data = await img.read()
     image = Image.open(io.BytesIO(img_data))
@@ -87,6 +93,10 @@ async def jmm(ctx: discord.Interaction, img: discord.Attachment, quality: int = 
         image = add_text_to_image(image, message)
     # Passage en RGB
     image = image.convert('RGB')
+    # Redimensionnement
+    width, height = image.size
+    imgscale = resize / 100
+    image = image.resize((int(width * imgscale), int(height * imgscale)))
     # Compression
     with io.BytesIO() as image_binary:
         image.save(image_binary, 'JPEG', quality=quality)
