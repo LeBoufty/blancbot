@@ -2,8 +2,6 @@ import discord
 from discord import app_commands
 import json
 import random
-import os
-import requests
 from PIL import Image, ImageDraw, ImageFont
 import io
 import textwrap
@@ -16,7 +14,8 @@ thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech !
 Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
 patate_role = 1311765186876805202
-#patate_role = 541259130191740938 # Rôle de test
+# patate_role = 541259130191740938 # Rôle de test
+pingroles: dict = json.load(open("pingroles.json", "r", encoding="utf-8"))
 
 @tree.command(
         name="randomizeinputs",
@@ -130,6 +129,99 @@ async def patatechaude(ctx: discord.Interaction, cible: discord.User):
         await ctx.response.send_message("Je n'ai pas la permission de donner le rôle.", ephemeral=True)
         return
     await ctx.response.send_message(f"Tu connais le jeu de la patate chaude ? C'est {cible.mention} qui répond.", ephemeral=True)
+
+@tree.command(
+    name="rolelist",
+    description="Affiche la liste des mailing lists du serveur"
+)
+async def rolelist(ctx: discord.Interaction):
+    content = ""
+    for v in pingroles.values():
+        content += f"- **{v['name']}** : `{v['description']}`\n"
+    embed = discord.Embed(title="Listes de diffusion", description=content)
+    await ctx.response.send_message(embed=embed, ephemeral=True)
+
+@tree.command(
+    name="addrole",
+    description="Ajoute un rôle aux mailing lists"
+)
+async def addrole(ctx: discord.Interaction, id: str, description: str):
+    try: newid = int(id)
+    except Exception:
+        await ctx.response.send_message("L'ID fourni est invalide.", ephemeral=True)
+        return
+    role = discord.utils.get(ctx.guild.roles, id=newid)
+    if role is None:
+        await ctx.response.send_message("Ce rôle n'existe pas.", ephemeral=True)
+        return
+    pingroles[role.name] = {
+        "name": role.name,
+        "id": newid,
+        "description": description
+    }
+    json.dump(pingroles, open("pingroles.json", "w", encoding="utf-8"))
+    await ctx.response.send_message(f"Le rôle **{role.name}** a été ajouté aux listes de diffusion avec comme description `{description}` ! Utilisez `/subscribe` pour l'ajouter à vos rôles !")
+
+@tree.command(
+    name="deleterole",
+    description="Supprime un rôle des mailing lists"
+)
+async def deleterole(ctx: discord.Interaction, name: str):
+    try:
+        pingroles.pop(name)
+        json.dump(pingroles, open("pingroles.json", "w", encoding="utf-8"))
+        await ctx.response.send_message(f"Le rôle **@{name}** a été supprimé des listes de diffusion, vous ne pouvez plus vous y inscrire via `/subscribe`.")
+    except Exception:
+        await ctx.response.send_message("Ce rôle n'est pas dans les mailing lists ! Utilise bien le nom du rôle et pas son ID.", ephemeral=True)
+
+@tree.command(
+    name="resetsubscribers",
+    description="Retire le rôle à tout le monde"
+)
+async def resetsubscribers(ctx: discord.Interaction, name: str):
+    try:
+        id = pingroles[name]["id"]
+        role = discord.utils.get(ctx.guild.roles, id=id)
+        if role is None:
+            await ctx.response.send_message("Ce rôle n'existe pas.", ephemeral=True)
+            return
+        for m in role.members:
+            await m.remove_roles(role)
+        await ctx.response.send_message(f"Les abonnés à **@{name}** ont été remis à zéro, vous pouvez vous y réinscrire via `/subscribe` !")
+    except Exception:
+        await ctx.response.send_message("Ce rôle n'est pas dans les mailing lists ! Utilise bien le nom du rôle et pas son ID.", ephemeral=True)
+
+@tree.command(
+    name="subscribe",
+    description="Abonne-toi à une liste de diffusion"
+)
+async def subscribe(ctx: discord.Interaction, name: str):
+    try:
+        id = pingroles[name]["id"]
+        role = discord.utils.get(ctx.guild.roles, id=id)
+        if role is None:
+            await ctx.response.send_message("Ce rôle n'existe pas.", ephemeral=True)
+            return
+        await ctx.user.add_roles(role)
+        await ctx.response.send_message(f"Tu es maintenant abonné à **{name}** !", ephemeral=True)
+    except Exception:
+        await ctx.response.send_message("Ce rôle n'est pas dans les mailing lists ! Utilise bien le nom du rôle et pas son ID.", ephemeral=True)
+
+@tree.command(
+    name="unsubscribe",
+    description="Désabonne-toi d'une liste de diffusion"
+)
+async def unsubscribe(ctx: discord.Interaction, name: str):
+    try:
+        id = pingroles[name]["id"]
+        role = discord.utils.get(ctx.guild.roles, id=id)
+        if role is None:
+            await ctx.response.send_message("Ce rôle n'existe pas.", ephemeral=True)
+            return
+        await ctx.user.remove_roles(role)
+        await ctx.response.send_message(f"Tu es maintenant désabonné de **{name}** !", ephemeral=True)
+    except Exception:
+        await ctx.response.send_message("Ce rôle n'est pas dans les mailing lists ! Utilise bien le nom du rôle et pas son ID.", ephemeral=True)
 
 @tree.command(
         name="ia",

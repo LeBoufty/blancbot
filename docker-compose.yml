@@ -1,9 +1,8 @@
-version: '3.7'
-
 services:
   bot:
     build: .
     volumes:
       - ./BOT_TOKEN:/app/BOT_TOKEN:ro
-      - ./data:/app/data:ro
+      - ./pingroles.json:/app/pingroles.json:rw
+      - ./data:/app/data:rw
       - ./thumbsup:/app/thumbsup:rw
