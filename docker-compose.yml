@@ -1,8 +1,0 @@
-services:
-  bot:
-    build: .
-    volumes:
-      - ./BOT_TOKEN:/app/BOT_TOKEN:ro
-      - ./pingroles.json:/app/pingroles.json:rw
-      - ./data:/app/data:rw
-      - ./thumbsup:/app/thumbsup:rw
