@@ -15,7 +15,7 @@ IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech 
 Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
 patate_role = 1311765186876805202
 # patate_role = 541259130191740938 # Rôle de test
-pingroles: dict = json.load(open("pingroles.json", "r", encoding="utf-8"))
+pingroles: dict = json.load(open("data/pingroles.json", "r", encoding="utf-8"))
 
 @tree.command(
         name="randomizeinputs",
@@ -159,7 +159,7 @@ async def addrole(ctx: discord.Interaction, id: str, description: str):
         "id": newid,
         "description": description
     }
-    json.dump(pingroles, open("pingroles.json", "w", encoding="utf-8"))
+    json.dump(pingroles, open("data/pingroles.json", "w", encoding="utf-8"))
     await ctx.response.send_message(f"Le rôle **{role.name}** a été ajouté aux listes de diffusion avec comme description `{description}` ! Utilisez `/subscribe` pour l'ajouter à vos rôles !")
 
 @tree.command(
@@ -169,7 +169,7 @@ async def addrole(ctx: discord.Interaction, id: str, description: str):
 async def deleterole(ctx: discord.Interaction, name: str):
     try:
         pingroles.pop(name)
-        json.dump(pingroles, open("pingroles.json", "w", encoding="utf-8"))
+        json.dump(pingroles, open("data/pingroles.json", "w", encoding="utf-8"))
         await ctx.response.send_message(f"Le rôle **@{name}** a été supprimé des listes de diffusion, vous ne pouvez plus vous y inscrire via `/subscribe`.")
     except Exception:
         await ctx.response.send_message("Ce rôle n'est pas dans les mailing lists ! Utilise bien le nom du rôle et pas son ID.", ephemeral=True)
