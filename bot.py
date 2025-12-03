@@ -5,6 +5,8 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 import io
 import textwrap
+import os
+import requests
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
@@ -229,6 +231,47 @@ async def unsubscribe(ctx: discord.Interaction, name: str):
 )
 async def IA(ctx: discord.Interaction):
     await ctx.response.send_message(IA_message, ephemeral=False)
+
+def archipelago_online():
+    response = requests.get("http://archipelago.mafreidyne.motorcycles").status_code
+    return response == 400
+
+@tree.command(
+    name="archipelago",
+    description="Affiche l'état actuel du serveur Archipelago"
+)
+async def archipelago(ctx: discord.Interaction):
+    yamls = ["`" + i + "`" for i in os.listdir("Players")]
+    title = "🟡 État du serveur inconnu."
+    if archipelago_online():
+        title = "🟢 Le serveur est en ligne !\n\n"
+    else:
+        title = "🔴 Le serveur est hors ligne.\n\n"
+    content = f"YAML trouvés : {', '.join(yamls)}"
+    embed = discord.Embed(title=title, description=content)
+    await ctx.response.send_message(embed=embed, ephemeral=True)
+
+@tree.command(
+    name="uploadyaml",
+    description="Permet d'envoyer un yaml au serveur"
+)
+async def uploadyaml(ctx: discord.Interaction, yaml: discord.Attachment):
+    if not (yaml.filename.endswith(".yml") or yaml.filename.endswith(".yaml")):
+        await ctx.response.send_message("Ce fichier n'est pas un YAML.", ephemeral=True)
+        return
+    open(f"Players/{yaml.filename}", "wb").write(await yaml.read())
+    await ctx.response.send_message("Fichier envoyé !", ephemeral=True)
+
+@tree.command(
+    name="deleteyaml",
+    description="Supprime un yaml du serveur"
+)
+async def deleteyaml(ctx: discord.Interaction, yaml: str):
+    try:
+        os.remove(f"Players/{yaml}")
+        await ctx.response.send_message("Fichier supprimé !", ephemeral=True)
+    except:
+        await ctx.response.send_message("Une erreur s'est produite.", ephemeral=True)
 
 @client.event
 async def on_ready():
