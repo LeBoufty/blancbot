@@ -15,6 +15,12 @@ smashinputs = json.load(open("data/inputs.json", 'r', encoding="utf-8"))['smashI
 thumbsupimages = json.load(open("data/thumbsup.json", 'r', encoding="utf-8"))
 IA_message = """## Ouah les gars ! c'est de l'IA, un sujet nouveau et high tech !
 Pour être **leader** dans le **market** nous avons besoin d'outils **responsive** et **easy access**. Pour cela nous envisageons de remplacer notre algorithme développé par Timmy notre **web interactive developer and js champion** par une solution utilisant l'**IA** avec comme base un **LLM** développé en local. Le tout en méthode **AGILE** et en supervision **latérale circulaire**. Sous la supervision de Jeannine la **HR management administrator** and **happiness manager** qui a vu une vidéo de formation sur l'IA."""
+baroumessage = """🎭 La légitimité n'attend pas le nombre de votes... 🗳
+À l'ère des likes et des stories, certains pensent que tout se joue dans une élection. Mais l'histoire, elle, retient ceux qui savent fédérer. 🌟 C'est pourquoi le compte Insta a pris un virage stratégique : confié au bureau reconnu par les anciens baroudeurs, pour garantir une continuité digne de notre communauté.
+
+Pas de coups d'éclat, juste une vision. 👌 Pendant que d'autres comptent leurs voix, nous écrivons les vraies pages de cette aventure collective. Restez connectés : le meilleur est encore à venir.
+
+[#BaroudeursUnis](https://www.instagram.com/explore/tags/BaroudeursUnis) [#LégitimitéAvantTout](https://www.instagram.com/explore/tags/LégitimitéAvantTout)"""
 patate_role = 1311765186876805202
 # patate_role = 541259130191740938 # Rôle de test
 pingroles: dict = json.load(open("data/pingroles.json", "r", encoding="utf-8"))
@@ -231,6 +237,13 @@ async def unsubscribe(ctx: discord.Interaction, name: str):
 )
 async def IA(ctx: discord.Interaction):
     await ctx.response.send_message(IA_message, ephemeral=False)
+
+@tree.command(
+        name="baroudeurs",
+        description="Décrit un projet innovant et unique"
+)
+async def baroudeurs(ctx: discord.Interaction):
+    await ctx.response.send_message(baroumessage, ephemeral=False)
 
 def archipelago_online():
     response = requests.get("http://archipelago.mafreidyne.motorcycles").status_code
